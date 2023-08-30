@@ -1,15 +1,27 @@
 .PHONY: build clean deploy gomodgen
 
+GOFLAGS=-ldflags="-s -w"
+GOOS=linux
+ifeq ($(shell uname -m), aarch64)
+GOARCH=arm64
+else ifeq ($(shell uname -m), x86_64)
+GOARCH=amd64
+else
+	@echo "Unsupported architecture. Please build manually."
+	@exit 1
+endif
+GO_ENV=GOARCH=${GOARCH} GOOS=${GOOS} CGO_ENABLED=0
+
 build: gomodgen
 	export GO111MODULE=on
 	go mod tidy
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/hello hello/main.go
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/world world/main.go
+	env ${GO_ENV} go build ${GOFLAGS} -o bin/hello hello/main.go
+	env ${GO_ENV} go build ${GOFLAGS} -o bin/world world/main.go
 
 clean:
-	rm -rf ./bin ./vendor go.sum
+	rm -rf ./bin
 
-offline: build
+offline: clean build
 	sls offline --noTimeout
 
 deploy: clean build
