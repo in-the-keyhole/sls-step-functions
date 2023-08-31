@@ -5,11 +5,12 @@ import (
 	"log/slog"
 
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/workspaces/sls-step-functions/common"
 )
 
 type Event struct {
-	MediaRequests []MediaRequest `json:"mediaRequests"`
-	Bucket        BucketInfo     `json:"bucket"`
+	MediaRequests []MediaRequest    `json:"mediaRequests"`
+	Bucket        common.BucketInfo `json:"bucket"`
 }
 
 type MediaRequest struct {
@@ -20,15 +21,10 @@ type MediaRequest struct {
 	ProductCode string `json:"productCode"`
 }
 
-type BucketInfo struct {
-	Bucket string `json:"bucket,omitempty"`
-	Key    string `json:"key,omitempty"`
-}
-
 type Response struct {
-	Complete    bool       `json:"assembleComplete"`
-	NextPayload any        `json:"nextPayload"`
-	Bucket      BucketInfo `json:"bucket,omitempty"`
+	Complete    bool              `json:"assembleComplete"`
+	NextPayload any               `json:"nextPayload"`
+	Bucket      common.BucketInfo `json:"bucket,omitempty"`
 }
 
 func Handler(ctx context.Context, event Event) (response Response, e error) {
@@ -45,14 +41,14 @@ func Handler(ctx context.Context, event Event) (response Response, e error) {
 	if assembleComplete {
 		return Response{
 			Complete:    true,
-			NextPayload: BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
+			NextPayload: common.BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
 		}, nil
 	} else {
 		return Response{
 			Complete: false,
 			NextPayload: Event{
 				MediaRequests: event.MediaRequests[1:],
-				Bucket:        BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
+				Bucket:        common.BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
 			},
 		}, nil
 	}
