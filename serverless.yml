@@ -21,13 +21,16 @@ package:
 functions:
   hello:
     handler: bin/hello
-    events:
-      - httpApi:
-          path: /hello
-          method: get
+    # events:
+    #   - httpApi:
+    #       path: /hello
+    #       method: post
   world:
     handler: bin/world
-
+    # events:
+    #   - httpApi:
+    #       path: /world
+    #       method: post
 
 stepFunctions:
   stateMachines:
@@ -35,7 +38,7 @@ stepFunctions:
       events:
         - http:
             path: /execute
-            method: get
+            method: post
       definition:
         Comment: "A sample workflow"
         StartAt: Hello
@@ -43,7 +46,16 @@ stepFunctions:
           Hello:
             Type: Task
             Resource: "arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-hello"
-            Next: World
+            Next: CheckEmptyArray
+          CheckEmptyArray:
+            Type: Choice
+            Choices:
+              - Variable: $.processingComplete
+                BooleanEquals: true
+                Next: World
+            Default: Hello
+            OutputPath: $.remainingItems
+
           World:
             Type: Task
             Resource: "arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-world"
