@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log/slog"
 
@@ -16,16 +15,9 @@ type Response struct {
 
 func Handler(ctx context.Context, bucketInfo common.BucketInfo) (response Response, e error) {
 
-	temp, err := json.Marshal(bucketInfo)
-	slog.Info(string(temp))
-
 	slog.Info("Bucket Info",
 		"bucket", bucketInfo.Bucket,
 		"key", bucketInfo.Key)
-
-	if err != nil {
-		return response, err
-	}
 
 	return Response{
 		URL: fmt.Sprintf("http://somehost.com/%s.zip", bucketInfo.Key),
