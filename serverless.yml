@@ -19,48 +19,44 @@ package:
     - ./bin/**
 
 functions:
-  hello:
-    handler: bin/hello
+  assembleMedia:
+    handler: bin/assembleMedia
     # events:
     #   - httpApi:
-    #       path: /hello
+    #       path: /assembleMedia
     #       method: post
-  world:
-    handler: bin/world
-    # events:
-    #   - httpApi:
-    #       path: /world
-    #       method: post
+  distribution:
+    handler: bin/distribution
 
 stepFunctions:
   stateMachines:
-    helloStepFunc:
+    packageWorkflow:
       events:
         - http:
-            path: /execute
+            path: /package
             method: post
       definition:
-        Comment: "A sample workflow"
-        StartAt: Hello
+        Comment: "A package workflow"
+        StartAt: AssembleMedia
         States:
-          Hello:
+          AssembleMedia:
             Type: Task
             Resource: 
-              Fn::GetAtt: [hello, Arn]
-            Next: CheckEmptyArray
-          CheckEmptyArray:
+              Fn::GetAtt: [assembleMedia, Arn]
+            Next: CheckAssembleComplete
+          CheckAssembleComplete:
             Type: Choice
+            OutputPath: $.nextPayload
             Choices:
-              - Variable: $.processingComplete
+              - Variable: $.assembleComplete
                 BooleanEquals: true
-                Next: World
-            Default: Hello
-            OutputPath: $.remainingItems
+                Next: Distribution
+            Default: AssembleMedia
 
-          World:
+          Distribution:
             Type: Task
             Resource:
-              Fn::GetAtt: [world, Arn]
+              Fn::GetAtt: [distribution, Arn]
             End: true
 
 custom:

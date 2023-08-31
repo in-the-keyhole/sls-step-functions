@@ -15,8 +15,8 @@ GO_ENV=GOARCH=${GOARCH} GOOS=${GOOS} CGO_ENABLED=0
 build: gomodgen
 	export GO111MODULE=on
 	go mod tidy
-	env ${GO_ENV} go build ${GOFLAGS} -o bin/hello hello/main.go
-	env ${GO_ENV} go build ${GOFLAGS} -o bin/world world/main.go
+	env ${GO_ENV} go build ${GOFLAGS} -o bin/assembleMedia assembleMedia/main.go
+	env ${GO_ENV} go build ${GOFLAGS} -o bin/distribution distribution/main.go
 
 clean:
 	rm -rf ./bin
