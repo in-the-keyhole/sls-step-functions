@@ -45,7 +45,8 @@ stepFunctions:
         States:
           Hello:
             Type: Task
-            Resource: "arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-hello"
+            Resource: 
+              Fn::GetAtt: [hello, Arn]
             Next: CheckEmptyArray
           CheckEmptyArray:
             Type: Choice
@@ -58,7 +59,8 @@ stepFunctions:
 
           World:
             Type: Task
-            Resource: "arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-world"
+            Resource:
+              Fn::GetAtt: [world, Arn]
             End: true
 
 custom:
