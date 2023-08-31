@@ -7,18 +7,14 @@ import (
 	"log/slog"
 
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/workspaces/sls-step-functions/common"
 )
-
-type BucketInfo struct {
-	Bucket string `form:"bucket"`
-	Key    string `form:"key"`
-}
 
 type Response struct {
 	URL string `json:"url"`
 }
 
-func Handler(ctx context.Context, bucketInfo BucketInfo) (response Response, e error) {
+func Handler(ctx context.Context, bucketInfo common.BucketInfo) (response Response, e error) {
 
 	temp, err := json.Marshal(bucketInfo)
 	slog.Info(string(temp))
