@@ -3,7 +3,16 @@
 {
 	"name": "Go",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/go:1-1.21-bullseye",
+	// "image": "mcr.microsoft.com/devcontainers/go:1-1.21-bullseye",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			// Update the VARIANT arg to pick a version of Go: 1, 1.18, 1.17
+			// Append -bullseye or -buster to pin to an OS version.
+			// Use -bullseye variants on local arm64/Apple Silicon.
+			"VARIANT": "1.21-bullseye",
+		}
+	},
 	"runArgs": [
 		"--env-file",
 		"${localWorkspaceFolder}/.devcontainer/.env",
@@ -27,7 +36,8 @@
 		"vscode": {
 			"extensions": [
 				"golang.go",
-				"eamodio.gitlens"
+				"eamodio.gitlens",
+				"DmitriyMuraviov.lunatic-file-picker"
 			]
 		}
 	},

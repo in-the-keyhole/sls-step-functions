@@ -1,0 +1,18 @@
+{
+  "mediaRequests": [
+    {
+      "format": "64kmp3",
+      "id3v2": "stripped",
+      "bibleId": "ENGESV",
+      "productCode": "N2ESV",
+      "mediaId": "ENGESVN2DA"
+    },
+    {
+      "format": "64kmp3",
+      "id3v2": "stripped",
+      "bibleId": "ENGKJV",
+      "productCode": "N2KJV",
+      "mediaId": "ENGKJVN2DA"
+    }
+  ]
+}

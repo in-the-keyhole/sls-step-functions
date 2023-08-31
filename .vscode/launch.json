@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Compiled Lambda Function",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/${relativeFileDirname}",
+            "env": {
+                "_LAMBDA_SERVER_PORT": "8080",
+                "IS_OFFLINE": "true",
+                "GOFLAGS": "-buildvcs=false"
+            },
+            "args": [],
+            "debugAdapter":"dlv-dap",
+            "dlvFlags": ["--check-go-version=false"] 
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug Lambda Function",
+            "configurations": [
+                "Launch Compiled Lambda Function"
+            ]
+        }
+    ]
+}
