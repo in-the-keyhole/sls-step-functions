@@ -5,16 +5,13 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: go1.x
-
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
-
-#  environment:
-#    variable1: value1
+  
+  stage: ${opt:stage, 'dev'}
+  region: ${env:AWS_REGION, 'us-east-2'}
 
 plugins:
   - serverless-offline
+  - serverless-step-functions
 
 package:
   patterns:
@@ -30,10 +27,27 @@ functions:
           method: get
   world:
     handler: bin/world
-    events:
-      - httpApi:
-          path: /world
-          method: get
+
+
+stepFunctions:
+  stateMachines:
+    helloStepFunc:
+      events:
+        - http:
+            path: /execute
+            method: get
+      definition:
+        Comment: "A sample workflow"
+        StartAt: Hello
+        States:
+          Hello:
+            Type: Task
+            Resource: "arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-hello"
+            Next: World
+          World:
+            Type: Task
+            Resource: "arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-world"
+            End: true
 
 custom:
   serverless-offline:
