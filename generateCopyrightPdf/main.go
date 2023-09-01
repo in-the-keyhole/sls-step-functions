@@ -23,9 +23,8 @@ type MediaRequest struct {
 }
 
 type Response struct {
-	Complete    bool              `json:"copyrightPdfComplete"`
-	NextPayload any               `json:"nextPayload"`
-	Bucket      common.BucketInfo `json:"bucket,omitempty"`
+	Complete bool              `json:"copyrightPdfComplete"`
+	Bucket   common.BucketInfo `json:"bucket,omitempty"`
 }
 
 func Handler(ctx context.Context, event Event) (response Response, e error) {
@@ -48,22 +47,19 @@ func Handler(ctx context.Context, event Event) (response Response, e error) {
 	pdf.SetFont("Arial", "B", 16)
 
 	// Add some text to the PDF
-	pdf.Cell(40, 10, "Hello, PDF!")
+	pdf.Cell(40, 10, "Product Code: "+currentMediaRequest.ProductCode)
 
 	// Output the PDF to a file
-	err := pdf.OutputFileAndClose("example.pdf")
+	err := pdf.OutputFileAndClose(currentMediaRequest.ProductCode + ".pdf")
 	if err != nil {
 		return Response{
 			Complete: false,
-			NextPayload: Event{
-				MediaRequests: event.MediaRequests[1:],
-				Bucket:        common.BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
-			},
+			Bucket:   common.BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
 		}, nil
 	} else {
 		return Response{
-			Complete:    true,
-			NextPayload: common.BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
+			Complete: true,
+			Bucket:   common.BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
 		}, nil
 	}
 

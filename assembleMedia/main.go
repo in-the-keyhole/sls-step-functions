@@ -22,9 +22,10 @@ type MediaRequest struct {
 }
 
 type Response struct {
-	Complete    bool              `json:"assembleComplete"`
-	NextPayload any               `json:"nextPayload"`
-	Bucket      common.BucketInfo `json:"bucket,omitempty"`
+	Complete      bool              `json:"assembleComplete"`
+	NextPayload   any               `json:"nextPayload"`
+	Bucket        common.BucketInfo `json:"bucket,omitempty"`
+	MediaRequests []MediaRequest    `json:"mediaRequests"`
 }
 
 func Handler(ctx context.Context, event Event) (response Response, e error) {
@@ -40,8 +41,11 @@ func Handler(ctx context.Context, event Event) (response Response, e error) {
 	assembleComplete := len(event.MediaRequests[1:]) == 0
 	if assembleComplete {
 		return Response{
-			Complete:    true,
-			NextPayload: common.BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
+			Complete: true,
+			NextPayload: Event{
+				MediaRequests: event.MediaRequests,
+				Bucket:        common.BucketInfo{Bucket: "BUCKETNAMEGOESHERE", Key: "ASSEMBLEDFOLDERGOESHERE"},
+			},
 		}, nil
 	} else {
 		return Response{
