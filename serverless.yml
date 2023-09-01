@@ -12,6 +12,8 @@ provider:
 plugins:
   - serverless-offline
   - serverless-step-functions
+  - serverless-step-functions-local
+  - serverless-offline-lambda
 
 package:
   patterns:
@@ -62,3 +64,6 @@ stepFunctions:
 custom:
   serverless-offline:
     useDocker: true
+  stepFunctionsLocal:
+    accountId: keyhole-dev
+    region: us-west-2
