@@ -55,6 +55,11 @@ stepFunctions:
                 Next: Distribution
             Default: AssembleMedia
 
+          GenerateCopyrightPdf:
+            Type: Task
+            OutputPath: $.nextPayload
+            Default: GenerateCopyrightPdf
+
           Distribution:
             Type: Task
             Resource:
