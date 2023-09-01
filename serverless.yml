@@ -12,7 +12,7 @@ provider:
 plugins:
   - serverless-offline
   - serverless-step-functions
-  - serverless-step-functions-local
+  # - serverless-step-functions-local
   - serverless-offline-lambda
 
 package:
@@ -27,6 +27,8 @@ functions:
     #   - httpApi:
     #       path: /assembleMedia
     #       method: post
+  generateCopyrightPdf:
+    handler: bin/generateCopyrightPdf
   distribution:
     handler: bin/distribution
 
@@ -52,13 +54,15 @@ stepFunctions:
             Choices:
               - Variable: $.assembleComplete
                 BooleanEquals: true
-                Next: Distribution
+                Next: GenerateCopyrightPdf
             Default: AssembleMedia
 
           GenerateCopyrightPdf:
             Type: Task
             OutputPath: $.nextPayload
-            Default: GenerateCopyrightPdf
+            Resource:
+              Fn::GetAtt: [generateCopyrightPdf, Arn]
+            Next: Distribution
 
           Distribution:
             Type: Task
@@ -69,6 +73,6 @@ stepFunctions:
 custom:
   serverless-offline:
     useDocker: true
-  stepFunctionsLocal:
-    accountId: keyhole-dev
-    region: us-west-2
+  # stepFunctionsLocal:
+  #   accountId: keyhole-dev
+  #   region: us-west-2

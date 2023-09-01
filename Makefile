@@ -16,6 +16,7 @@ build: gomodgen
 	export GO111MODULE=on
 	go mod tidy
 	env ${GO_ENV} go build ${GOFLAGS} -o bin/assembleMedia assembleMedia/main.go
+	env ${GO_ENV} go build ${GOFLAGS} -o bin/generateCopyrightPdf generateCopyrightPdf/main.go
 	env ${GO_ENV} go build ${GOFLAGS} -o bin/distribution distribution/main.go
 
 clean:
